@@ -63,11 +63,11 @@ class UMAClient:
         r = Route("champs/?", champ=champion, tier=tier, rank=rank)
         try:
             async with self.session.get(r.url) as re:
+                data = await re.json()
                 if re.status == 500:
                     raise APIException
                 elif re.status != 200:
                     raise ChampionException(data["details"])
-                data = await re.json()
         except aiohttp.ClientError:
             raise ChampionException
 
@@ -97,11 +97,11 @@ class UMAClient:
         r = Route("nodes/", node)
         try:
             async with self.session.get(r.url) as re:
+                data = await re.json()
                 if re.status == 500:
                     raise APIException
                 elif re.status != 200:
                     raise NodeException(data["details"])
-                data = await re.json()
         except Exception as e:
             raise NodeException
 
@@ -131,11 +131,11 @@ class UMAClient:
         r = Route("war/", tier)
         try:
             async with self.session.get(r.url) as re:
+                data = await re.json()
                 if re.status == 500:
                     raise APIException
                 elif re.status != 200:
                     raise WarException(data["details"])
-                data = await re.json()
         except Exception as e:
             raise WarException
 
