@@ -63,15 +63,13 @@ class UMAClient:
         r = Route("champs/?", champ=champion, tier=tier, rank=rank)
         try:
             async with self.session.get(r.url) as re:
+                if re.status == 500:
+                    raise APIException
+                elif re.status != 200:
+                    raise ChampionException(data["details"])
                 data = await re.json()
-                print(f"{data = }")
         except aiohttp.ClientError:
             raise ChampionException
-        else:
-            if data["status"] == 500:
-                raise APIException
-            elif data["status"] != 200:
-                raise ChampionException(data["details"])
 
         return ChampInfo.from_json(data)
 
@@ -99,14 +97,13 @@ class UMAClient:
         r = Route("nodes/", node)
         try:
             async with self.session.get(r.url) as re:
+                if re.status == 500:
+                    raise APIException
+                elif re.status != 200:
+                    raise NodeException(data["details"])
                 data = await re.json()
         except Exception as e:
             raise NodeException
-        else:
-            if data["status"] == 500:
-                raise APIException
-            elif data["status"] != 200:
-                raise NodeException(data["details"])
 
         return NodeInfo.from_json(data)
 
@@ -134,14 +131,14 @@ class UMAClient:
         r = Route("war/", tier)
         try:
             async with self.session.get(r.url) as re:
+                if re.status == 500:
+                    raise APIException
+                elif re.status != 200:
+                    raise WarException(data["details"])
                 data = await re.json()
         except Exception as e:
             raise WarException
-        else:
-            if data["status"] == 500:
-                raise APIException
-            elif data["status"] != 200:
-                raise WarException(data["details"])
+
         return WarInfo.from_json(data)
 
     async def close(self) -> None:
