@@ -1,3 +1,4 @@
 from setuptools import setup
+from uma import __version__
 
-setup()
+setup(version=__version__)
