@@ -1,6 +1,8 @@
 # Copyright (c) 2022 - Jojo#7791
 # Licensed under MIT
 
+from __future__ import annotations
+
 import asyncio
 import aiohttp
 from urllib.parse import quote as _uriquote
@@ -35,6 +37,12 @@ class UMAClient:
         self.loop = loop or asyncio.get_event_loop()
         self.session = aiohttp.ClientSession()
 
+    async def __aenter__(self) -> UMAClient:
+        return self
+
+    async def __aexit__(self, *args) -> None:
+        await self.session.close()
+
     async def get_champ(self, champion: str, tier: int, rank: int) -> ChampInfo:
         """|coro|
         Get a champion from the api
@@ -64,10 +72,11 @@ class UMAClient:
         try:
             async with self.session.get(r.url) as re:
                 data = await re.json()
+                print(f"{data = }")
                 if re.status == 500:
                     raise APIException
                 elif re.status != 200:
-                    raise ChampionException(data["details"])
+                    raise ChampionException(data["detail"])
         except aiohttp.ClientError:
             raise ChampionException
 
@@ -101,7 +110,7 @@ class UMAClient:
                 if re.status == 500:
                     raise APIException
                 elif re.status != 200:
-                    raise NodeException(data["details"])
+                    raise NodeException(data["detail"])
         except Exception as e:
             raise NodeException
 
@@ -135,7 +144,7 @@ class UMAClient:
                 if re.status == 500:
                     raise APIException
                 elif re.status != 200:
-                    raise WarException(data["details"])
+                    raise WarException(data["detail"])
         except Exception as e:
             raise WarException
 
