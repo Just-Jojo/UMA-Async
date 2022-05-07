@@ -43,7 +43,7 @@ class UMAClient:
     async def __aexit__(self, *args) -> None:
         await self.session.close()
 
-    async def get_champ(self, champion: str, tier: int, rank: int) -> ChampInfo:
+    async def get_champ(self, champion: str, *, tier: int, rank: int) -> ChampInfo:
         """|coro|
         Get a champion from the api
         
