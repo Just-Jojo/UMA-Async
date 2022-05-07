@@ -6,5 +6,5 @@ from .exceptions import *
 from .utils import *
 
 
-version_info: tuple = (1, 0, 0, "dev3")
-__version__: str = "1.0.0.dev3"
+version_info: tuple = (1, 0, 0, "dev4")
+__version__: str = "1.0.0.dev4"
